@@ -7,6 +7,8 @@ import {
 import {
   handlerLogin,
   handlerRegister,
+  handlerReset,
+  handlerUsers,
 } from "./commands/users";
 
 async function main(): Promise<void> {
@@ -14,6 +16,8 @@ async function main(): Promise<void> {
 
   registerCommand(registry, "login", handlerLogin);
   registerCommand(registry, "register", handlerRegister);
+  registerCommand(registry, "reset", handlerReset);
+  registerCommand(registry, "users", handlerUsers);
 
   const args = process.argv.slice(2);
 

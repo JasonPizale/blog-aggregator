@@ -1,5 +1,5 @@
-import { setUser } from "../config";
-import { createUser, getUser } from "../lib/db/queries/users";
+import { readConfig, setUser } from "../config";
+import { createUser, getUser, getUsers, deleteUsers, } from "../lib/db/queries/users";
 import { CommandHandler } from "./commands";
 
 export const handlerLogin: CommandHandler = async (
@@ -44,4 +44,28 @@ export const handlerRegister: CommandHandler = async (
   setUser(user.name);
 
   console.log(`User created and logged in as ${user.name}`);
+};
+
+export const handlerReset: CommandHandler = async (
+  cmdName,
+  ...args
+): Promise<void> => {
+  await deleteUsers();
+  console.log("Database reset successfully");
+};
+
+export const handlerUsers: CommandHandler = async (
+  cmdName,
+  ...args
+): Promise<void> => {
+  const allUsers = await getUsers();
+  const config = readConfig();
+
+  for (const user of allUsers) {
+    if (user.name === config.currentUserName) {
+      console.log(`* ${user.name} (current)`);
+    } else {
+      console.log(`* ${user.name}`);
+    }
+  }
 };

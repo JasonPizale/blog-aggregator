@@ -15,3 +15,11 @@ export async function getUser(name: string) {
 
   return result[0];
 }
+
+export async function deleteUsers() {
+  await db.delete(users);
+}
+
+export async function getUsers() {
+  return await db.select().from(users);
+}
