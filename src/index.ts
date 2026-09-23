@@ -11,6 +11,13 @@ import {
   handlerUsers,
 } from "./commands/users";
 
+import { handlerAgg } from "./commands/agg";
+
+import { 
+  handlerAddFeed, 
+  handlerFeeds,
+} from "./commands/feeds";
+
 async function main(): Promise<void> {
   const registry: CommandsRegistry = {};
 
@@ -18,6 +25,9 @@ async function main(): Promise<void> {
   registerCommand(registry, "register", handlerRegister);
   registerCommand(registry, "reset", handlerReset);
   registerCommand(registry, "users", handlerUsers);
+  registerCommand(registry, "agg", handlerAgg);
+  registerCommand(registry, "addfeed", handlerAddFeed);
+  registerCommand(registry, "feeds", handlerFeeds);
 
   const args = process.argv.slice(2);
 
