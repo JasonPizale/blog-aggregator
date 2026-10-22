@@ -22,6 +22,20 @@
       "when": 1792689926220,
       "tag": "0002_amusing_purifiers",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1792694416842,
+      "tag": "0003_groovy_magik",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1792696409439,
+      "tag": "0004_equal_medusa",
+      "breakpoints": true
     }
   ]
 }

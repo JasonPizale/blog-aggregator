@@ -33,8 +33,8 @@ export const handlerAddFeed = async (
 };
 
 export const handlerFeeds = async (
-  cmdName,
-  ...args
+  cmdName: string,
+  ...args: string[]
 ): Promise<void> => {
   const results = await getFeeds();
 
