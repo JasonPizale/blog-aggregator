@@ -15,6 +15,13 @@
       "when": 1790191152998,
       "tag": "0001_greedy_rick_jones",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1792689926220,
+      "tag": "0002_amusing_purifiers",
+      "breakpoints": true
     }
   ]
 }

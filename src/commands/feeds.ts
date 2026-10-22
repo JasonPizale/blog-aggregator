@@ -1,8 +1,7 @@
-import { readConfig } from "../config";
-import { createFeed, getFeeds, } from "../lib/db/queries/feeds";
-import { getUser } from "../lib/db/queries/users";
+import { createFeed, getFeeds, getFeedByUrl, createFeedFollow, getFeedFollowsForUser, deleteFeedFollow, } from "../lib/db/queries/feeds";
 import { Feed, User } from "../lib/db/schema";
 import { CommandHandler } from "./commands";
+
 
 export function printFeed(feed: Feed, user: User): void {
   console.log(`ID: ${feed.id}`);
@@ -13,9 +12,10 @@ export function printFeed(feed: Feed, user: User): void {
   console.log(`User: ${user.name}`);
 }
 
-export const handlerAddFeed: CommandHandler = async (
-  cmdName,
-  ...args
+export const handlerAddFeed = async (
+  cmdName: string,
+  user: User,
+  ...args: string[]
 ): Promise<void> => {
   if (args.length < 2) {
     throw new Error("name and url are required");
@@ -23,24 +23,16 @@ export const handlerAddFeed: CommandHandler = async (
 
   const [name, url] = args;
 
-  const config = readConfig();
-
-  if (!config.currentUserName) {
-    throw new Error("no user is currently logged in");
-  }
-
-  const user = await getUser(config.currentUserName);
-
-  if (!user) {
-    throw new Error("current user does not exist");
-  }
-
   const feed = await createFeed(name, url, user.id);
+
+  const result = await createFeedFollow(user.id, feed.id);
+
+  console.log(`${result.userName} is now following ${result.feedName}`);
 
   printFeed(feed, user);
 };
 
-export const handlerFeeds: CommandHandler = async (
+export const handlerFeeds = async (
   cmdName,
   ...args
 ): Promise<void> => {
@@ -51,4 +43,50 @@ export const handlerFeeds: CommandHandler = async (
     console.log(`URL: ${result.feeds.url}`);
     console.log(`User: ${result.users.name}`);
   }
+};
+
+export const handlerFollow = async (
+  cmdName: string,
+  user: User,
+  ...args: string[]
+): Promise<void> => {
+  if (args.length !== 1) {
+    throw new Error("exactly one feed URL is required");
+  }
+
+  const feed = await getFeedByUrl(args[0]);
+
+  if (!feed) {
+    throw new Error("feed does not exist");
+  }
+
+  const result = await createFeedFollow(user.id, feed.id);
+
+  console.log(`${result.userName} is now following ${result.feedName}`);
+};
+
+export const handlerFollowing = async (
+  cmdName: string,
+  user: User,
+  ...args: string[]
+): Promise<void> => {
+  const follows = await getFeedFollowsForUser(user.id);
+
+  console.log(`Feeds followed by ${user.name}:`);
+
+  for (const follow of follows) {
+    console.log(`- ${follow.feedName}`);
+  }
+};
+
+export const handlerUnfollow = async (
+  cmdName: string, 
+  user: User,
+  ...args: string[]
+): Promise<void> => {
+  if (args.length !== 1) {
+    throw new Error("exactly one feed URL is required");
+  }
+
+  await deleteFeedFollow(user.id, args[0]);
 };
